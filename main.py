@@ -1,10 +1,5 @@
 from fastapi import FastAPI
 from core_app.core.config import settings
-
-# from core_app.core.database import engine, Base
-# from core_app.models.tables import User, Profile, Product, Inventory, Order, OrderItem
-
-# router에서 import 했으면, 해당 table 정보들은 삭제해야 함
 from core_app.test.db_con_test import test_db_router
 from core_app.api.v1.router import core_router
 

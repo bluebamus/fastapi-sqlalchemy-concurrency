@@ -1,0 +1,101 @@
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s
+ROLLBACK
+[cached since 8.177s ago] {'pk_1': 1}
+BEGIN (implicit)
+ROLLBACK
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+[cached since 8.187s ago] {'pk_1': 1, 'param_1': 1}
+BEGIN (implicit)
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+UPDATE posts SET "like"=%(like)s, version=%(version)s, modified_at=now() WHERE posts.pk = %(pk_1)s AND posts.version = %(version_1)s
+[cached since 8.188s ago] {'pk_1': 1, 'param_1': 1}
+[cached since 0.183s ago] {'like': 24, 'version': 24, 'pk_1': 1, 'version_1': 23}
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+UPDATE posts SET "like"=%(like)s, version=%(version)s, modified_at=now() WHERE posts.pk = %(pk_1)s AND posts.version = %(version_1)s
+[cached since 8.19s ago] {'pk_1': 1, 'param_1': 1}
+[cached since 0.1845s ago] {'like': 24, 'version': 24, 'pk_1': 1, 'version_1': 23}
+COMMIT
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+BEGIN (implicit)
+[cached since 8.192s ago] {'pk_1': 1, 'param_1': 1}
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s
+ROLLBACK
+[cached since 8.184s ago] {'pk_1': 1}
+BEGIN (implicit)
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+ROLLBACK
+[cached since 8.194s ago] {'pk_1': 1, 'param_1': 1}
+BEGIN (implicit)
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+UPDATE posts SET "like"=%(like)s, version=%(version)s, modified_at=now() WHERE posts.pk = %(pk_1)s AND posts.version = %(version_1)s
+[cached since 8.195s ago] {'pk_1': 1, 'param_1': 1}
+[cached since 0.1898s ago] {'like': 25, 'version': 25, 'pk_1': 1, 'version_1': 24}
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+UPDATE posts SET "like"=%(like)s, version=%(version)s, modified_at=now() WHERE posts.pk = %(pk_1)s AND posts.version = %(version_1)s
+[cached since 8.197s ago] {'pk_1': 1, 'param_1': 1}
+[cached since 0.1912s ago] {'like': 25, 'version': 25, 'pk_1': 1, 'version_1': 24}
+COMMIT
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+BEGIN (implicit)
+[cached since 8.198s ago] {'pk_1': 1, 'param_1': 1}
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s
+ROLLBACK
+[cached since 8.191s ago] {'pk_1': 1}
+ROLLBACK
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+[cached since 8.201s ago] {'pk_1': 1, 'param_1': 1}
+ROLLBACK
+select pg_catalog.version()
+[raw sql] {}
+select current_schema()
+[raw sql] {}
+show standard_conforming_strings
+[raw sql] {}
+BEGIN (implicit)
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s 
+ LIMIT %(param_1)s
+[generated in 0.00056s] {'pk_1': 1, 'param_1': 1}
+UPDATE posts SET "like"=%(like)s, version=%(version)s, modified_at=now() WHERE posts.pk = %(posts_pk)s
+[generated in 0.00038s] {'like': 0, 'version': 0, 'posts_pk': 1}
+COMMIT
+BEGIN (implicit)
+SELECT posts.pk AS posts_pk, posts."like" AS posts_like, posts.version AS posts_version, posts.modified_at AS posts_modified_at 
+FROM posts 
+WHERE posts.pk = %(pk_1)s
+[generated in 0.00045s] {'pk_1': 1}
+ROLLBACK
