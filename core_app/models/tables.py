@@ -9,6 +9,10 @@ from sqlalchemy.dialects.mysql import INTEGER
 Base = declarative_base()
 
 
+def custom_version_generator(current_version):
+    return current_version + 1  # 현재 버전에서 1을 증가시킴
+
+
 # 모델 정의
 class Post(Base):
     __tablename__ = "posts"
@@ -20,9 +24,11 @@ class Post(Base):
         DateTime(timezone=True), default=func.now(), onupdate=func.now()
     )
 
+    # __mapper_args__ = {"version_id_col": version}
+
     __mapper_args__ = {
         "version_id_col": version,
-        "version_id_generator": lambda version: version + 1,
+        "version_id_generator": custom_version_generator,  # 커스텀 버전 증가 함수 설정
     }
 
     def __init__(self, **kwargs):

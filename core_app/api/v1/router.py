@@ -97,48 +97,48 @@ def increase_like_by_optimistic_lock_sqlalchemy_versioning(session: Session):
     logger = setup_logger(thread_id)  # 스레드별 로거 설정
     session_id = id(session)
     cnt = 0
-    range_cnt = 25
+    range_cnt = 25  # 반복할 횟수
+
     while cnt < range_cnt:
         cnt += 1
         try:
-            post = session.query(Post).filter(Post.pk == 1).first()
+            # 현재 Post 객체를 가져오고 Pessimistic Locking을 적용
+            # post = session.query(Post).filter(Post.pk == 1).with_for_update().one()
+            post = session.query(Post).filter(Post.pk == 1).one()
             logger.info(
                 f"Thread {thread_id} (Session ID: {session_id}) acquired lock. Before ---- increment: like = {post.like}, version = {post.version}"
             )
-            # 버전 증가 및 좋아요 수 증가
+
+            # 현재 버전 저장
+            current_version = post.version
+
+            # like 수 증가
             post.like += 1
+            session.commit()  # 변경 사항 커밋
 
-            # 업데이트 쿼리 실행
-            result = (
-                session.query(Post)
-                .filter(
-                    Post.pk == post.pk, Post.version == post.version
-                )  # 이전 버전으로 필터링
-                .update({Post.like: post.like, Post.version: post.version + 1})
-            )
+            # 커밋 후 다시 Post 객체를 가져와서 버전 확인
+            updated_post = session.query(Post).filter(Post.pk == 1).one()
 
-            if result == 0:
+            if updated_post.version != current_version + 1:
                 logger.error(
                     f"Thread {thread_id} (Session ID: {session_id}) failed to update: version mismatch."
                 )
                 session.rollback()  # 롤백
-                cnt -= 1
                 continue  # 다음 반복으로 넘어감
 
-            session.commit()  # 성공적으로 업데이트된 경우 커밋
-            session.refresh(post)  # 최신 상태로 새로 고침
             logger.info(
-                f"Thread {thread_id} (Session ID: {session_id}) released lock. After **** commit: like = {post.like}, version = {post.version}"
+                f"Thread {thread_id} (Session ID: {session_id}) released lock. After **** commit: like = {updated_post.like}, version = {updated_post.version}"
             )
             logger.info(
                 f"Thread {thread_id} (Session ID: {session_id}) end of thread cnt = {cnt}"
             )
-            session.close()
         except Exception as e:
             logger.error(
                 f"Thread {thread_id} (Session ID: {session_id}) encountered an error: {e}"
             )
-            session.close()
+            session.rollback()  # 오류 발생 시 롤백
+        finally:
+            session.close()  # 세션 닫기
 
 
 # 기본값을 가지는 post의 row를 생성하는 함수
@@ -166,13 +166,14 @@ def initialize_likes(session: Session = Depends(get_db)):
     return {"message": "Post not found", "like_result": None}
 
 
-@core_router.get("/like")
+@core_router.get("/check")
 def get_like_count(session: Session = Depends(get_db)):
     post = session.query(Post).filter(Post.pk == 1).first()
     if post:
         return {
             "message": "/like : Current like count",
             "like_result": post.like,
+            "vsersion": post.version,
             "modified_at": post.modified_at,
         }
     return {"message": "Post not found", "like_result": None}
@@ -294,4 +295,32 @@ def increment_likes_optimistic_lock_sqlqlchemy_versioning(
     return {
         "message": "/2th-olock-sqlalchemy-versioning : optimistic lock increment completed",
         "like_result": result,
+    }
+
+
+@core_router.get("/test-versioning")
+def test_versioning(session: Session = Depends(get_db)):
+    # 기본값을 가지는 post의 row 생성
+    create_default_post(session)
+
+    # 현재 Post 객체를 가져옴
+    post = session.query(Post).filter(Post.pk == 1).one()
+
+    # 현재 like와 version 출력
+    initial_like = post.like
+    initial_version = post.version
+
+    # like 수 증가
+    post.like += 1
+    session.commit()  # 변경 사항 커밋
+
+    # 업데이트 후의 like와 version 가져오기
+    updated_post = session.query(Post).filter(Post.pk == 1).one()
+
+    return {
+        "message": "Versioning test completed",
+        "initial_like": initial_like,
+        "initial_version": initial_version,
+        "updated_like": updated_post.like,
+        "updated_version": updated_post.version,
     }
